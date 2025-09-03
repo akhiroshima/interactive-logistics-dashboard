@@ -31,9 +31,9 @@ const DualAxisChart = ({ data, unfilteredData }) => {
   // Legend data
   const legendData = useMemo(() => {
     // Generate legend from unfiltered data so all options always show
+    // Only show delivery status categories, not order volume (which is a line, not stackable)
     const unfilteredChartData = processDualAxisData(unfilteredData || data, drillDown);
     return [
-      { key: 'orderCount', label: 'Order Volume', color: '#ef4444', count: unfilteredChartData.length },
       { key: 'onTimeDelivery', label: 'On Time %', color: '#10b981', count: unfilteredChartData.length },
       { key: 'lateDelivery', label: 'Late %', color: '#ef4444', count: unfilteredChartData.length },
       { key: 'earlyDelivery', label: 'Early %', color: '#06b6d4', count: unfilteredChartData.length }
@@ -160,10 +160,10 @@ const DualAxisChart = ({ data, unfilteredData }) => {
   const traces = useMemo(() => {
     const activeLegendFilters = getActiveLegendFilters('dual-axis-chart');
     
-    // If no legend filters are active, show all traces
+    // If no legend filters are active, show all delivery status traces
     const showAll = activeLegendFilters.length === 0;
     
-    const showOrderVolume = showAll || activeLegendFilters.includes('orderCount');
+    // Order volume is always shown (not part of legend anymore)
     const showOnTimeDelivery = showAll || activeLegendFilters.includes('onTimeDelivery');
     const showLateDelivery = showAll || activeLegendFilters.includes('lateDelivery');
     const showEarlyDelivery = showAll || activeLegendFilters.includes('earlyDelivery');
@@ -210,26 +210,24 @@ const DualAxisChart = ({ data, unfilteredData }) => {
       });
     }
     
-    // Line for order volume
-    if (showOrderVolume) {
-      traces.push({
-        x: chartData.map(item => item.period),
-        y: chartData.map(item => item.orderCount),
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: 'Order Volume',
-        line: { color: '#ef4444', width: 3 },
-        marker: { 
-          color: '#ef4444', 
-          size: 8,
-          line: { color: 'white', width: 2 }
-        },
-        hovertemplate: '<b>%{x}</b><br>Orders: %{y:,}<extra></extra>',
-        hoverinfo: 'skip', // Skip hover on the line itself
-        hoveron: 'points', // Only hover on marker points
-        yaxis: 'y2'
-      });
-    }
+    // Line for order volume (always shown - not part of interactive legend)
+    traces.push({
+      x: chartData.map(item => item.period),
+      y: chartData.map(item => item.orderCount),
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Order Volume',
+      line: { color: '#ef4444', width: 3 },
+      marker: { 
+        color: '#ef4444', 
+        size: 8,
+        line: { color: 'white', width: 2 }
+      },
+      hovertemplate: '<b>%{x}</b><br>Orders: %{y:,}<extra></extra>',
+      hoverinfo: 'skip', // Skip hover on the line itself
+      hoveron: 'points', // Only hover on marker points
+      yaxis: 'y2'
+    });
     
     return traces;
   }, [chartData, getActiveLegendFilters]);
