@@ -62,7 +62,8 @@ const FilterSideMenu = ({ isOpen, onClose }) => {
       title: 'Delivery Filters',
       sections: [
         { type: FILTER_TYPES.DELIVERY_STATUS, label: 'Delivery Status', icon: '📦' },
-        { type: FILTER_TYPES.LATE_REASON, label: 'Late Reasons', icon: '⚠️' }
+        { type: FILTER_TYPES.LATE_REASON, label: 'Late Reasons', icon: '⚠️' },
+        { type: FILTER_TYPES.CARRIER, label: 'Carriers', icon: '🚚' }
       ]
     }
   ];

@@ -129,6 +129,33 @@ export const generateHierarchicalLogisticsData = (count = 10000) => {
     'Incorrect Address', 'Customer Unavailable', 'Warehouse Delays', 'Driver Issues'
   ];
 
+  // Carrier options with realistic market share weights
+  const carriers = ['FedEx', 'UPS', 'DHL', 'USPS', 'Amazon Logistics', 'OnTrac', 'LaserShip'];
+  const carrierWeights = {
+    'FedEx': 0.25,
+    'UPS': 0.25,
+    'USPS': 0.20,
+    'Amazon Logistics': 0.15,
+    'DHL': 0.10,
+    'OnTrac': 0.03,
+    'LaserShip': 0.02
+  };
+
+  // Function to select carrier based on weights
+  const selectWeightedCarrier = () => {
+    const rand = Math.random();
+    let cumulative = 0;
+    
+    for (const [carrier, weight] of Object.entries(carrierWeights)) {
+      cumulative += weight;
+      if (rand < cumulative) {
+        return carrier;
+      }
+    }
+    // Fallback to random if weights don't add up to 1
+    return carriers[Math.floor(Math.random() * carriers.length)];
+  };
+
   // Country weights for more realistic distribution (US gets 40% of orders)
   const countryWeights = {
     'United States': 0.4,
@@ -215,6 +242,7 @@ export const generateHierarchicalLogisticsData = (count = 10000) => {
                            12 + Math.random() * 12;
 
     const orderValue = Math.floor(Math.random() * 10000) + 100;
+    const carrier = selectWeightedCarrier();
     
     data.push({
       id: `order-${i}`,
@@ -228,6 +256,7 @@ export const generateHierarchicalLogisticsData = (count = 10000) => {
       lateReason,
       deliveryTime: Math.round(baseDeliveryTime * 10) / 10,
       orderValue,
+      carrier,
       quarter: `Q${Math.ceil((date.getMonth() + 1) / 3)} ${date.getFullYear()}`,
       month: format(date, 'MMM yyyy'),
       week: `Week of ${format(startOfWeek(date), 'MMM d, yyyy')}`,

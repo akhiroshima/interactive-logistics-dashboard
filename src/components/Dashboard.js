@@ -7,6 +7,7 @@ import DateRangePicker from './DateRangePicker';
 import PlotlyChoroplethMap from './charts/PlotlyChoroplethMap';
 import DualAxisChart from './charts/DualAxisChart';
 import LateDeliveryChart from './charts/LateDeliveryChart';
+import CarrierLateDeliveryChart from './charts/CarrierLateDeliveryChart';
 
 const Dashboard = () => {
   const { activeFilters, getFilteredData, getFilteredDataForMap } = useFilters();
@@ -59,12 +60,17 @@ const Dashboard = () => {
 
         {/* Dual Axis Chart - Order Volume vs Delivery Times */}
         <div className="chart-container dual-axis-chart">
-          <DualAxisChart data={filteredData} />
+          <DualAxisChart data={filteredData} unfilteredData={HIERARCHICAL_LOGISTICS_DATA} />
         </div>
 
         {/* Late Delivery Reasons Chart */}
         <div className="chart-container bar-chart">
-          <LateDeliveryChart data={filteredData} />
+          <LateDeliveryChart data={filteredData} unfilteredData={HIERARCHICAL_LOGISTICS_DATA} />
+        </div>
+
+        {/* Carrier Late Delivery Analysis Chart */}
+        <div className="chart-container carrier-chart">
+          <CarrierLateDeliveryChart data={filteredData} unfilteredData={HIERARCHICAL_LOGISTICS_DATA} />
         </div>
       </div>
 

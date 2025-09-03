@@ -6,7 +6,7 @@ import { useFilters, FILTER_TYPES } from '../../contexts/FilterContext';
 import { processLateDeliveryData, getDrillDownOptions, LATE_REASONS } from '../../data/mockData';
 import InteractiveLegend from '../InteractiveLegend';
 
-const LateDeliveryChart = ({ data }) => {
+const LateDeliveryChart = ({ data, unfilteredData }) => {
   const { addFilter, addMultipleFilters, toggleLegendItem, isLegendItemHidden, getAvailableDrillDowns, getOptimalDrillDown, activeFilters, getActiveLegendFilters } = useFilters();
   const [drillDown, setDrillDown] = useState('all');
 
@@ -42,23 +42,29 @@ const LateDeliveryChart = ({ data }) => {
 
   // Legend data
   const legendData = useMemo(() => {
+    // Generate legend from unfiltered data so all options always show
+    const unfilteredChartData = processLateDeliveryData(unfilteredData || data, drillDown);
+    
     if (drillDown === 'all') {
-      return chartData.map(reason => ({
-        key: reason.reason,
-        label: reason.reason,
-        color: reasonColors[reason.reason] || '#64748b',
-        count: reason.count
-      }));
+      return LATE_REASONS.map(reason => {
+        const reasonData = unfilteredChartData.find(item => item.reason === reason);
+        return {
+          key: reason,
+          label: reason,
+          color: reasonColors[reason] || '#64748b',
+          count: reasonData ? reasonData.count : 0
+        };
+      });
     } else {
       // For time-based drill-downs, show all possible reasons
       return LATE_REASONS.map(reason => ({
         key: reason,
         label: reason,
         color: reasonColors[reason] || '#64748b',
-        count: chartData.reduce((sum, period) => sum + (period[reason] || 0), 0)
+        count: unfilteredChartData.reduce((sum, period) => sum + (period[reason] || 0), 0)
       }));
     }
-  }, [chartData, drillDown]);
+  }, [unfilteredData, data, drillDown]);
 
   // Convert period string to date range for consistent filtering
   const getDateRangeFromPeriod = useCallback((period, granularity) => {

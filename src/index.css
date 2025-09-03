@@ -89,7 +89,7 @@ code {
 .charts-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
   gap: 25px;
   margin-bottom: 30px;
 }
@@ -900,5 +900,20 @@ code {
   border-radius: 10px;
   padding: 2px 6px;
   font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Carrier Late Delivery Chart Specific Styles */
+.carrier-late-delivery-chart .chart-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 400px;
+}
+
+.carrier-late-delivery-chart .chart-title {
+  color: #1f2937;
+  margin-bottom: 15px;
+  font-size: 18px;
   font-weight: 600;
 }

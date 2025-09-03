@@ -6,7 +6,7 @@ import { useFilters, FILTER_TYPES } from '../../contexts/FilterContext';
 import { processDualAxisData, getDrillDownOptions } from '../../data/mockData';
 import InteractiveLegend from '../InteractiveLegend';
 
-const DualAxisChart = ({ data }) => {
+const DualAxisChart = ({ data, unfilteredData }) => {
   const { addFilter, addMultipleFilters, toggleLegendItem, isLegendItemHidden, getAvailableDrillDowns, getOptimalDrillDown, activeFilters, getActiveLegendFilters } = useFilters();
   const [drillDown, setDrillDown] = useState('monthly');
 
@@ -30,13 +30,15 @@ const DualAxisChart = ({ data }) => {
 
   // Legend data
   const legendData = useMemo(() => {
+    // Generate legend from unfiltered data so all options always show
+    const unfilteredChartData = processDualAxisData(unfilteredData || data, drillDown);
     return [
-      { key: 'orderCount', label: 'Order Volume', color: '#ef4444', count: chartData.length },
-      { key: 'onTimeDelivery', label: 'On Time %', color: '#10b981', count: chartData.length },
-      { key: 'lateDelivery', label: 'Late %', color: '#ef4444', count: chartData.length },
-      { key: 'earlyDelivery', label: 'Early %', color: '#06b6d4', count: chartData.length }
+      { key: 'orderCount', label: 'Order Volume', color: '#ef4444', count: unfilteredChartData.length },
+      { key: 'onTimeDelivery', label: 'On Time %', color: '#10b981', count: unfilteredChartData.length },
+      { key: 'lateDelivery', label: 'Late %', color: '#ef4444', count: unfilteredChartData.length },
+      { key: 'earlyDelivery', label: 'Early %', color: '#06b6d4', count: unfilteredChartData.length }
     ];
-  }, [chartData]);
+  }, [unfilteredData, data, drillDown]);
 
   // Convert period string to date range for consistent filtering
   const getDateRangeFromPeriod = useCallback((period, granularity) => {
