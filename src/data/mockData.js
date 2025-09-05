@@ -1,4 +1,5 @@
 import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfQuarter, endOfQuarter } from 'date-fns';
+import { DRILL_DOWN_LABELS } from '../constants/chartConstants';
 
 // Regions with their geographic coordinates
 export const REGIONS = {
@@ -262,22 +263,22 @@ export const getUniqueValues = (data, field) => {
 export const getDrillDownOptions = (chartType) => {
   const baseOptions = {
     geographic: [
-      { value: 'region', label: 'By Region' },
-      { value: 'country', label: 'By Country', disabled: true }, // Future enhancement
+      { value: 'region', label: DRILL_DOWN_LABELS.region },
+      { value: 'country', label: DRILL_DOWN_LABELS.country, disabled: true }, // Future enhancement
     ],
     temporal: [
-      { value: 'yearly', label: 'Yearly' },
-      { value: 'quarterly', label: 'Quarterly' },
-      { value: 'monthly', label: 'Monthly' },
-      { value: 'weekly', label: 'Weekly' },
-      { value: 'daily', label: 'Daily' }
+      { value: 'yearly', label: DRILL_DOWN_LABELS.yearly },
+      { value: 'quarterly', label: DRILL_DOWN_LABELS.quarterly },
+      { value: 'monthly', label: DRILL_DOWN_LABELS.monthly },
+      { value: 'weekly', label: DRILL_DOWN_LABELS.weekly },
+      { value: 'daily', label: DRILL_DOWN_LABELS.daily }
     ],
     categorical: [
-      { value: 'all', label: 'All Reasons' },
-      { value: 'monthly', label: 'By Month' },
-      { value: 'quarterly', label: 'By Quarter' },
-      { value: 'weekly', label: 'By Week' },
-      { value: 'daily', label: 'By Day' }
+      { value: 'all', label: DRILL_DOWN_LABELS.all_reasons },
+      { value: 'monthly', label: DRILL_DOWN_LABELS.by_month },
+      { value: 'quarterly', label: DRILL_DOWN_LABELS.by_quarter },
+      { value: 'weekly', label: DRILL_DOWN_LABELS.by_week },
+      { value: 'daily', label: DRILL_DOWN_LABELS.by_day }
     ]
   };
 

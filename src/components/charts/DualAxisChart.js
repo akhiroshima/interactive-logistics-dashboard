@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfQuarter, endOfQuarter } from 'date-fns';
 import { useFilters, FILTER_TYPES } from '../../contexts/FilterContext';
 import { processDualAxisData, getDrillDownOptions } from '../../data/mockData';
+import { CHART_COLORS, DRILL_DOWN_LABELS, CHART_TITLES, AXIS_LABELS } from '../../constants/chartConstants';
 import InteractiveLegend from '../InteractiveLegend';
 
 const DualAxisChart = ({ data, unfilteredData }) => {
@@ -34,9 +35,9 @@ const DualAxisChart = ({ data, unfilteredData }) => {
     // Only show delivery status categories, not order volume (which is a line, not stackable)
     const unfilteredChartData = processDualAxisData(unfilteredData || data, drillDown);
     return [
-      { key: 'onTimeDelivery', label: 'On Time %', color: '#10b981', count: unfilteredChartData.length },
-      { key: 'lateDelivery', label: 'Late %', color: '#ef4444', count: unfilteredChartData.length },
-      { key: 'earlyDelivery', label: 'Early %', color: '#06b6d4', count: unfilteredChartData.length }
+      { key: 'onTimeDelivery', label: 'On Time %', color: CHART_COLORS['On Time'], count: unfilteredChartData.length },
+      { key: 'lateDelivery', label: 'Late %', color: CHART_COLORS['Late'], count: unfilteredChartData.length },
+      { key: 'earlyDelivery', label: 'Early %', color: CHART_COLORS['Early'], count: unfilteredChartData.length }
     ];
   }, [unfilteredData, data, drillDown]);
 
@@ -177,7 +178,7 @@ const DualAxisChart = ({ data, unfilteredData }) => {
         y: chartData.map(item => item.onTimeCount),
         type: 'bar',
         name: 'On Time Delivery',
-        marker: { color: '#10b981', opacity: 0.8 },
+        marker: { color: CHART_COLORS['On Time'], opacity: 0.8 },
         hovertemplate: '<b>%{x}</b><br>On Time: %{customdata:.1f}%<br>Count: %{y}<extra></extra>',
         customdata: chartData.map(item => item.onTimePercentage),
         yaxis: 'y'
@@ -190,7 +191,7 @@ const DualAxisChart = ({ data, unfilteredData }) => {
         y: chartData.map(item => item.lateCount),
         type: 'bar',
         name: 'Late Delivery',
-        marker: { color: '#ef4444', opacity: 0.8 },
+        marker: { color: CHART_COLORS['Late'], opacity: 0.8 },
         hovertemplate: '<b>%{x}</b><br>Late: %{customdata:.1f}%<br>Count: %{y}<extra></extra>',
         customdata: chartData.map(item => item.latePercentage),
         yaxis: 'y'
@@ -203,7 +204,7 @@ const DualAxisChart = ({ data, unfilteredData }) => {
         y: chartData.map(item => item.earlyCount),
         type: 'bar',
         name: 'Early Delivery',
-        marker: { color: '#06b6d4', opacity: 0.8 },
+        marker: { color: CHART_COLORS['Early'], opacity: 0.8 },
         hovertemplate: '<b>%{x}</b><br>Early: %{customdata:.1f}%<br>Count: %{y}<extra></extra>',
         customdata: chartData.map(item => item.earlyPercentage),
         yaxis: 'y'
@@ -217,9 +218,9 @@ const DualAxisChart = ({ data, unfilteredData }) => {
       type: 'scatter',
       mode: 'lines+markers',
       name: 'Order Volume',
-      line: { color: '#ef4444', width: 3 },
+      line: { color: CHART_COLORS['Order Volume'], width: 3 },
       marker: { 
-        color: '#ef4444', 
+        color: CHART_COLORS['Order Volume'], 
         size: 8,
         line: { color: 'white', width: 2 }
       },
@@ -244,12 +245,12 @@ const DualAxisChart = ({ data, unfilteredData }) => {
       automargin: true
     },
     yaxis: {
-      title: 'Delivery Status Distribution (%)',
+      title: AXIS_LABELS.delivery_percentage,
       side: 'left',
       color: '#3b82f6'
     },
     yaxis2: {
-      title: 'Number of Orders',
+      title: AXIS_LABELS.order_count,
       side: 'right',
       overlaying: 'y',
       color: '#ef4444'
@@ -276,7 +277,7 @@ const DualAxisChart = ({ data, unfilteredData }) => {
   return (
     <div className="dual-axis-chart">
       <div className="chart-header">
-        <h3 className="chart-title">Delivery Status Distribution vs. Order Volume</h3>
+        <h3 className="chart-title">{CHART_TITLES.dual_axis}</h3>
         <Select
           options={drillDownOptions}
           value={drillDownOptions.find(option => option.value === drillDown)}

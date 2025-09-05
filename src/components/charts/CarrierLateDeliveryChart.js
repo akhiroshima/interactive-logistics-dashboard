@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import Select from 'react-select';
 import { useFilters, FILTER_TYPES } from '../../contexts/FilterContext';
+import { CHART_COLORS, DRILL_DOWN_LABELS, CHART_TITLES, AXIS_LABELS } from '../../constants/chartConstants';
 import InteractiveLegend from '../InteractiveLegend';
 
 const CarrierLateDeliveryChart = ({ data, unfilteredData }) => {
@@ -16,23 +17,14 @@ const CarrierLateDeliveryChart = ({ data, unfilteredData }) => {
     }
   }, [activeFilters, getOptimalDrillDown, drillDown]);
 
-  // Late delivery reason colors - consistent with other charts
-  const reasonColors = useMemo(() => ({
-    'Weather Delays': '#ef4444',
-    'Traffic Congestion': '#f97316', 
-    'Vehicle Breakdown': '#eab308',
-    'Customs Issues': '#22c55e',
-    'Incorrect Address': '#06b6d4',
-    'Customer Unavailable': '#8b5cf6',
-    'Warehouse Delays': '#ec4899',
-    'Driver Issues': '#64748b'
-  }), []);
+  // Use standardized color palette for late delivery reasons
+  const reasonColors = CHART_COLORS;
 
   // Available drill-down options
   const drillDownOptions = useMemo(() => {
     const baseOptions = [
-      { value: 'all', label: 'All Carriers' },
-      { value: 'country', label: 'By Country' }
+      { value: 'all', label: DRILL_DOWN_LABELS.all_carriers },
+      { value: 'country', label: DRILL_DOWN_LABELS.by_country }
     ];
     return getAvailableDrillDowns(baseOptions);
   }, [getAvailableDrillDowns]);
@@ -197,11 +189,11 @@ const CarrierLateDeliveryChart = ({ data, unfilteredData }) => {
   const layout = useMemo(() => ({
     title: { text: '', font: { size: 16 } },
     xaxis: { 
-      title: 'Number of Late Deliveries',
+      title: AXIS_LABELS.late_delivery_count,
       side: 'bottom'
     },
     yaxis: { 
-      title: drillDown === 'all' ? 'Carrier' : 'Country',
+      title: drillDown === 'all' ? AXIS_LABELS.carrier : AXIS_LABELS.country,
       side: 'left'
     },
     barmode: 'stack',
@@ -225,7 +217,7 @@ const CarrierLateDeliveryChart = ({ data, unfilteredData }) => {
     return (
       <div className="carrier-late-delivery-chart">
         <div className="chart-header">
-          <h3 className="chart-title">Late Delivery Reasons by Carrier</h3>
+          <h3 className="chart-title">{CHART_TITLES.carrier_late_delivery}</h3>
           <Select
             value={drillDownOptions.find(option => option.value === drillDown)}
             onChange={(selected) => setDrillDown(selected.value)}
@@ -242,7 +234,7 @@ const CarrierLateDeliveryChart = ({ data, unfilteredData }) => {
   return (
     <div className="carrier-late-delivery-chart">
       <div className="chart-header">
-        <h3 className="chart-title">Late Delivery Reasons by Carrier</h3>
+        <h3 className="chart-title">{CHART_TITLES.carrier_late_delivery}</h3>
         <Select
           value={drillDownOptions.find(option => option.value === drillDown)}
           onChange={(selected) => setDrillDown(selected.value)}

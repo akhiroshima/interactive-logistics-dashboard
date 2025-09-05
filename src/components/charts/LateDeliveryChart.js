@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfQuarter, endOfQuarter } from 'date-fns';
 import { useFilters, FILTER_TYPES } from '../../contexts/FilterContext';
 import { processLateDeliveryData, getDrillDownOptions, LATE_REASONS } from '../../data/mockData';
+import { CHART_COLORS, DRILL_DOWN_LABELS, CHART_TITLES, AXIS_LABELS } from '../../constants/chartConstants';
 import InteractiveLegend from '../InteractiveLegend';
 
 const LateDeliveryChart = ({ data, unfilteredData }) => {
@@ -18,17 +19,8 @@ const LateDeliveryChart = ({ data, unfilteredData }) => {
     }
   }, [activeFilters, getOptimalDrillDown, drillDown]);
 
-  // Color palette for different reasons
-  const reasonColors = {
-    'Weather Delays': '#3b82f6',
-    'Traffic Congestion': '#ef4444',
-    'Vehicle Breakdown': '#10b981',
-    'Customs Issues': '#f59e0b',
-    'Incorrect Address': '#8b5cf6',
-    'Customer Unavailable': '#ec4899',
-    'Warehouse Delays': '#06b6d4',
-    'Driver Issues': '#84cc16'
-  };
+  // Use standardized color palette for different reasons
+  const reasonColors = CHART_COLORS;
 
   // Process late delivery data based on drill-down level
   const chartData = useMemo(() => {
@@ -239,7 +231,7 @@ const LateDeliveryChart = ({ data, unfilteredData }) => {
   return (
     <div className="late-delivery-chart">
       <div className="chart-header">
-        <h3 className="chart-title">Late Delivery Analysis</h3>
+        <h3 className="chart-title">{CHART_TITLES.late_delivery}</h3>
         <Select
           options={drillDownOptions}
           value={drillDownOptions.find(option => option.value === drillDown)}
